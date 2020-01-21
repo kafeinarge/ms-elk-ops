@@ -10,14 +10,14 @@ spring:
 
   data:
    elasticsearch:
-     cluster-nodes: elasticsearch:30541
+     cluster-nodes: 207.154.232.181:30541
      cluster-name: docker-cluster
 
 
 
 kafka-client-id: customerupdaterclient
 #kafka-bootstrap-servers: 207.154.232.181:31782
-kafka-bootstrap-servers: kafka:31357
+kafka-bootstrap-servers: 165.22.22.133:31847
 kafka-consumer-key-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
 kafka-consumer-value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 auto_commit_interval_ms_config: 1000
@@ -27,6 +27,6 @@ kafka-order-topic: customerupdater
 kafka-order-group-id: kafka-collector
 
 server:
-  port: 8054
+  port: 8080
   servlet:
-    context-path: /collector
+    context-path: /customer-logger
