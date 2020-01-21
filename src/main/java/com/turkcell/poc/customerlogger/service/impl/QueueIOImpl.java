@@ -65,7 +65,6 @@ public class QueueIOImpl implements QueueIO {
 
     /**
      * getting orders from queue and store to document db
-     *
      */
     @Override
     @PostConstruct
@@ -87,7 +86,7 @@ public class QueueIOImpl implements QueueIO {
                 customerBean.setTckn(customer.getTckn());
                 customersFromQueue.add(customer);
             }
-            if(customersFromQueue.size()>0)
+            if (customersFromQueue.size() > 0)
                 customerRepository.saveAll(customersFromQueue);
         }
     }
@@ -100,9 +99,9 @@ public class QueueIOImpl implements QueueIO {
      */
     public KafkaConsumer<String, String> createConsumer() {
         Properties configProperties = new Properties();
-        configProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaBootstrapServers);
-        configProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,kafkaProducerKeyDeserializer);
-        configProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,kafkaProducerValueDeserializer);
+        configProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServers);
+        configProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaProducerKeyDeserializer);
+        configProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaProducerValueDeserializer);
         configProperties.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaOrderGroupId);
         configProperties.put(ConsumerConfig.CLIENT_ID_CONFIG, kafkaClientId);
         configProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
@@ -111,9 +110,6 @@ public class QueueIOImpl implements QueueIO {
 
         return new KafkaConsumer<>(configProperties);
     }
-
-
-
 
 
 }

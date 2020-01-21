@@ -1,23 +1,22 @@
 # LOGGING
 logging:
   level:
-   org.springframework.web: DEBUG
+    org.springframework.web: DEBUG
 
   # APPLICATION
 spring:
   application:
-   name: turkcell-customer-logger-poc
+    name: turkcell-customer-logger-poc
 
   data:
-   elasticsearch:
-     cluster-nodes: 207.154.232.181:30541
-     cluster-name: docker-cluster
+    elasticsearch:
+      cluster-nodes: ${ELASTICSEARCH_URL}
+      cluster-name: ${ELASTICSEARCH_CLUSTER}
 
 
 
 kafka-client-id: customerupdaterclient
-#kafka-bootstrap-servers: 207.154.232.181:31782
-kafka-bootstrap-servers: 165.22.22.133:31847
+kafka-bootstrap-servers: ${KAFKA_URL}
 kafka-consumer-key-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
 kafka-consumer-value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 auto_commit_interval_ms_config: 1000
@@ -27,6 +26,6 @@ kafka-order-topic: customerupdater
 kafka-order-group-id: kafka-collector
 
 server:
-  port: 8080
+  port: 8064
   servlet:
     context-path: /customer-logger
