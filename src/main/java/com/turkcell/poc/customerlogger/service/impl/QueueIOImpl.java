@@ -9,12 +9,9 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -57,6 +54,9 @@ public class QueueIOImpl implements QueueIO {
     final
     Client client;
 
+    @Autowired
+    Customer customerBean;
+
     public QueueIOImpl(CustomerRepository customerRepository, Client client) {
         this.customerRepository = customerRepository;
         this.client = client;
@@ -65,13 +65,11 @@ public class QueueIOImpl implements QueueIO {
 
     /**
      * getting orders from queue and store to document db
-     *
      */
     @Override
     @PostConstruct
     public void storeToES() throws InterruptedException {
-        Properties configProperties = createKafkaProperties();
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(configProperties);
+        KafkaConsumer<String, String> consumer = createConsumer();
 
         consumer.subscribe(Collections.singletonList(kafkaOrderTopic));
 
@@ -79,39 +77,39 @@ public class QueueIOImpl implements QueueIO {
         List<Customer> customersFromQueue = new ArrayList<>();
 
         while (true) {
+            customersFromQueue.clear();
             ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
             log.info(records.count() + " customers has been audited");
             for (ConsumerRecord<String, String> record : records) {
+                log.debug("Consumer Record: topic:" + record.topic() + " offset:" + record.offset());
                 Customer customer = gson.fromJson(record.value(), Customer.class);
+                customerBean.setTckn(customer.getTckn());
                 customersFromQueue.add(customer);
             }
-            if(customersFromQueue.size()>0)
+            if (customersFromQueue.size() > 0)
                 customerRepository.saveAll(customersFromQueue);
         }
     }
 
 
     /**
-     * returns properties of kafka
+     * returns consumer of kafka
      *
      * @return
      */
-    public Properties createKafkaProperties() {
+    public KafkaConsumer<String, String> createConsumer() {
         Properties configProperties = new Properties();
-        configProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaBootstrapServers);
-        configProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,kafkaProducerKeyDeserializer);
-        configProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,kafkaProducerValueDeserializer);
+        configProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServers);
+        configProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaProducerKeyDeserializer);
+        configProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaProducerValueDeserializer);
         configProperties.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaOrderGroupId);
         configProperties.put(ConsumerConfig.CLIENT_ID_CONFIG, kafkaClientId);
         configProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
         configProperties.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, autoCommitIntervalMsConfig);
         configProperties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeoutMsConfig);
 
-        return configProperties;
+        return new KafkaConsumer<>(configProperties);
     }
-
-
-
 
 
 }

@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @ToString
 @EqualsAndHashCode(of = "tckn")
 @Data
-@Document(indexName = "customers")
+@Document(indexName = "customers_#{customer.getTckn()}")
 public class Customer extends BaseEntity {
 
     private String tckn;
