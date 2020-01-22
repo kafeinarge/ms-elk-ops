@@ -11,7 +11,6 @@ For further reference, please consider the following sections:
 * [Apache Kafka Streams Binding Capabilities of Spring Cloud Stream](https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#_kafka_streams_binding_capabilities_of_spring_cloud_stream)
 * [Spring for Apache Kafka](https://docs.spring.io/spring-boot/docs/2.2.2.RELEASE/reference/htmlsingle/#boot-features-kafka)
 * [Spring Boot Admin (Server)](https://codecentric.github.io/spring-boot-admin/current/#getting-started)
-* [Mongo DB] (https://www.mongodb.com/)
 * Elasticsearch (https://www.elastic.co/)
 
 ### Guides
