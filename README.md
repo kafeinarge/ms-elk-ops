@@ -12,6 +12,7 @@ For further reference, please consider the following sections:
 * [Spring for Apache Kafka](https://docs.spring.io/spring-boot/docs/2.2.2.RELEASE/reference/htmlsingle/#boot-features-kafka)
 * [Spring Boot Admin (Server)](https://codecentric.github.io/spring-boot-admin/current/#getting-started)
 * [Mongo DB] (https://www.mongodb.com/)
+* Elasticsearch (https://www.elastic.co/)
 
 ### Guides
 The following guides illustrate how to use some features concretely:
@@ -20,10 +21,9 @@ The following guides illustrate how to use some features concretely:
 
 Please follow these steps:
 
-Kafka and Mongo DB must be installed.
+Kafka and Elasticsearch must be installed.
 
-Customer can be save/update via "/customer" POST API.
+Customers data are available on kafka. A Kafka Consumer can be created and customers data get from kafka via the consumer. Then,
+This customers data can be saved to elasticsearch with the right index via spring data elasticsearch.
 
-Customers can be got via "/customer" GET API.
-
-After updating customer a kafka producer can be created and customer object can be sent to kafka via kafka producer.
+The indexes can be seen on document definitions.
